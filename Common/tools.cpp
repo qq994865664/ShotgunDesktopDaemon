@@ -103,3 +103,12 @@ string GetCurrentUserName()
 	GetUserName(strBuffer, &dwSize);
 	return strBuffer;
 }
+
+string GetUserTempPath()
+{
+	string TempPath;
+	char charPath[MAX_PATH];
+	if (GetTempPath(MAX_PATH, charPath))
+		TempPath = charPath;
+	return TempPath;
+}

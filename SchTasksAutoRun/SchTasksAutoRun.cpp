@@ -82,8 +82,23 @@ int main(int argc, char** argv)
 
 	try
 	{
-		string str_path = REMOTE_CONFIG_PATH;
-		INIReader reader(str_path);
+		string remote_config_path = REMOTE_CONFIG_PATH;
+
+		char path_buffer[_MAX_PATH] = { 0 };
+		char drive[_MAX_DRIVE] = { 0 };
+		char dir[_MAX_DIR] = { 0 };
+		char filename[_MAX_FNAME] = { 0 };
+		char ext[_MAX_EXT] = { 0 };
+
+		_splitpath_s(remote_config_path.c_str(), drive, dir, filename, ext);
+
+		string temp_config_path = GetUserTempPath();
+		temp_config_path += filename;
+		temp_config_path += ext;
+
+		CopyFileFromRemote(remote_config_path, temp_config_path);
+
+		INIReader reader(temp_config_path);
 
 		reader.ParseError();
 

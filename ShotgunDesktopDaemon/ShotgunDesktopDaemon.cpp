@@ -162,8 +162,24 @@ bool ReadConfig()
 {
 	try
 	{
-		string str_path = REMOTE_CONFIG_PATH;
-		INIReader reader(str_path);
+		string remote_config_path = REMOTE_CONFIG_PATH;
+
+		char path_buffer[_MAX_PATH] = { 0 };
+		char drive[_MAX_DRIVE] = { 0 };
+		char dir[_MAX_DIR] = { 0 };
+		char filename[_MAX_FNAME] = { 0 };
+		char ext[_MAX_EXT] = { 0 };
+
+		_splitpath_s(remote_config_path.c_str(), drive, dir, filename, ext);
+
+		string temp_config_path = GetUserTempPath();
+		temp_config_path += filename;
+		temp_config_path += ext;
+
+		//copy file from remote path
+		CopyFileFromRemote(remote_config_path, temp_config_path);
+
+		INIReader reader(temp_config_path);
 
 		reader.ParseError();
 
@@ -173,7 +189,7 @@ bool ReadConfig()
 		
 		return true;
 	}
-	catch (const std::exception & e)
+	catch (const std::exception& e)
 	{
 		WriteLog("读取配置文件失败！");
 		return false;
@@ -238,8 +254,8 @@ int main()
 	{
 
 #if NDEBUG
-		CancelAutoStart();
-		Sleep(100);
+		//CancelAutoStart();
+		//Sleep(100);
 		AutoStart();
 		ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
 		ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性

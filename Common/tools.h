@@ -22,3 +22,5 @@ string GetModuleDir();
 string int2str(int inum);
 
 string GetCurrentUserName();
+
+string GetUserTempPath();
