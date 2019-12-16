@@ -14,6 +14,7 @@
 #include "tools.h"
 using namespace std;
 
+
 #if NDEBUG
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #endif
@@ -27,7 +28,6 @@ namespace fs = std::filesystem;
 #define REMOTE_CONFIG_PATH	"W:\\Tools\\ShotgunConfig\\ShotgunDesktop\\ShotgunDesktopDaemonConfig.ini"
 #define IGNORE_USER_PATH	"W:\\Tools\\ShotgunConfig\\ShotgunDesktop\\Timelog\\IgnoreUser"
 #endif
-
 
 
 static string gTaskNameNotify = "";
@@ -46,6 +46,16 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
+	//HWND desktop, task;
+	//desktop = FindWindow("ProgMan", NULL);
+	//task = FindWindow("Shell_TrayWnd", NULL);
+	//ShowWindow(task, SW_HIDE);//隐藏任务栏
+	//ShowWindow(desktop, SW_HIDE);//隐藏桌面
+	//Sleep(3000);
+	//ShowWindow(task, SW_SHOW);//显示
+	//ShowWindow(desktop, SW_SHOW);//显示
+
+	//return 0;
 	//开机自动隐藏窗口
 	HWND hwnd;
 	hwnd = FindWindow("ConsoleWindowClass", NULL);//找到当前窗口句柄
@@ -271,9 +281,9 @@ void DoTask()
 
 		if (CopyFileFromRemote(gRemoteFilePath, local_file_path))
 		{
-			DeleteTask(gTaskName);
-			Sleep(200);
-			CreateOnceTask(gTaskName, local_file_path, gStartTime);
+			//DeleteTask(gTaskName);
+			//Sleep(200);
+			//CreateOnceTask(gTaskName, local_file_path, gStartTime);
 		}
 
 		if (CopyFileFromRemote(gRemoteFilePathNotify, local_file_path_notify))

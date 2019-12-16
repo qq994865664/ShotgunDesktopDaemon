@@ -254,11 +254,12 @@ int main()
 	{
 
 #if NDEBUG
+		
+		ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
+		ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
 		//CancelAutoStart();
 		//Sleep(100);
 		AutoStart();
-		ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
-		ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
 #endif
 		ReadConfig();
 		DownloadFile();
