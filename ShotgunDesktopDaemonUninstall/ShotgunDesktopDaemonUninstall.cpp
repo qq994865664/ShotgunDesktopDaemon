@@ -23,6 +23,14 @@ void CancelAutoStart()
 			//3、关闭注册表
 			RegCloseKey(hKey);
 		}
+		
+		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS)
+		{
+			//2、删除值
+			RegDeleteValue(hKey, KEY_NAME);
+			//3、关闭注册表
+			RegCloseKey(hKey);
+		}
 	}
 	catch (std::exception e)
 	{

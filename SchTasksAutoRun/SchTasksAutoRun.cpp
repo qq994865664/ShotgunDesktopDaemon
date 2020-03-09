@@ -31,10 +31,13 @@ namespace fs = std::filesystem;
 
 
 static string gTaskNameNotify = "";
+static string gTaskNameCheck = "";
 static string gTaskName = "";
 static string gStartTime = "";
+static string gStartTimeCheck = "";
 static string gRemoteFilePath = "";
 static string gRemoteFilePathNotify = "";
+static string gRemoteFilePathCheck = "";
 static string gLogFilePath = "";
 
 int main(int argc, char** argv)
@@ -120,11 +123,18 @@ int main(int argc, char** argv)
 		Saturday = reader.Get("DAY_OF_WEEK", "Saturday", "OFF");
 		Sunday = reader.Get("DAY_OF_WEEK", "Sunday", "OFF");
 
-		gStartTime = reader.Get("TASKS", "StartTime", "18:00");
+		
 		gRemoteFilePath = reader.Get("TASKS", "RemoteFilePath", "");
 		gTaskName = reader.Get("TASKS", "TaskName", "ShotgunDesktopTimeLogRunTask");
+
+		gStartTime = reader.Get("TASKS", "StartTime", "18:00");
 		gRemoteFilePathNotify = reader.Get("TASKS", "RemoteFilePathNotify", "");
 		gTaskNameNotify = reader.Get("TASKS", "TaskNameNotify", "ShotgunNotifyRunTask");
+
+		gStartTimeCheck = reader.Get("TASKS", "StartTimeCheck", "17:25");
+		gRemoteFilePathCheck = reader.Get("TASKS", "RemoteFilePathCheck", "");
+		gTaskNameCheck = reader.Get("TASKS", "TaskNameCheck", "ShotgunDesktopTimeLogCheckTask");
+
 
 		gLogFilePath = reader.Get("LOG", "LogFilePath", "D:\\ShotgunDesktopDaemonLog.txt");
 	}
@@ -274,6 +284,13 @@ void DoTask()
 	local_file_path_notify += filename;
 	local_file_path_notify += ext;
 
+	_splitpath_s(gRemoteFilePathCheck.c_str(), drive, dir, filename, ext);
+
+	string local_file_path_check = GetModuleDir();
+	local_file_path_check += "\\";
+	local_file_path_check += filename;
+	local_file_path_check += ext;
+
 
 	try
 	{
@@ -291,6 +308,13 @@ void DoTask()
 			DeleteTask(gTaskNameNotify);
 			Sleep(200);
 			CreateOnceTask(gTaskNameNotify, local_file_path_notify, gStartTime);
+		}
+
+		if (CopyFileFromRemote(gRemoteFilePathCheck, local_file_path_check))
+		{
+			DeleteTask(gTaskNameCheck);
+			Sleep(200);
+			CreateOnceTask(gTaskNameCheck, local_file_path_check, gStartTimeCheck);
 		}
 
 	}
