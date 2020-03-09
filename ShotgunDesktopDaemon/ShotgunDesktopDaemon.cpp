@@ -42,7 +42,7 @@ void AutoStart()
 	try
 	{
 		//1、找到系统的启动项  
-		if (RegOpenKeyEx(HKEY_CURRENT_USER, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS) ///打开启动项       
+		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS) ///打开启动项       
 		{
 			//2、得到本程序自身的全路径
 			TCHAR strExeFullDir[MAX_PATH] = { 0 };
@@ -84,7 +84,7 @@ void CancelAutoStart()
 	try
 	{
 		//1、找到系统的启动项  
-		if (RegOpenKeyEx(HKEY_CURRENT_USER, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS)
+		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS)
 		{
 			//2、删除值
 			RegDeleteValue(hKey, KEY_NAME);
