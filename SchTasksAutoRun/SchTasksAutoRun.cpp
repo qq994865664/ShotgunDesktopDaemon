@@ -227,6 +227,16 @@ string CmdExec(const char* cmd)
 
 bool CopyFileFromRemote(string file_path_from, string file_path_to)
 {
+	if (!FileExist(file_path_from))
+	{
+		string str_err;
+		str_err = "复制文件失败，当前文件不存在: ";
+		str_err.append(file_path_from);
+
+		WriteLog(str_err);
+
+		return false;
+	}
 	return fs::copy_file(file_path_from, file_path_to, fs::copy_options::overwrite_existing);
 }
 

@@ -270,6 +270,7 @@ int main()
 			{
 				ReadConfig();
 				gReadConfigFlag++;
+				// only read config once
 			}
 			else
 			{
