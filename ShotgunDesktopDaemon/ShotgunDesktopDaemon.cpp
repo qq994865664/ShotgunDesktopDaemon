@@ -160,39 +160,46 @@ bool TimeUp(string str_time)
 
 bool ReadConfig()
 {
-	try
+	while (true)
 	{
-		string remote_config_path = REMOTE_CONFIG_PATH;
+		try
+		{
+			string remote_config_path = REMOTE_CONFIG_PATH;
 
-		char path_buffer[_MAX_PATH] = { 0 };
-		char drive[_MAX_DRIVE] = { 0 };
-		char dir[_MAX_DIR] = { 0 };
-		char filename[_MAX_FNAME] = { 0 };
-		char ext[_MAX_EXT] = { 0 };
+			char path_buffer[_MAX_PATH] = { 0 };
+			char drive[_MAX_DRIVE] = { 0 };
+			char dir[_MAX_DIR] = { 0 };
+			char filename[_MAX_FNAME] = { 0 };
+			char ext[_MAX_EXT] = { 0 };
 
-		_splitpath_s(remote_config_path.c_str(), drive, dir, filename, ext);
+			_splitpath_s(remote_config_path.c_str(), drive, dir, filename, ext);
 
-		string temp_config_path = GetUserTempPath();
-		temp_config_path += filename;
-		temp_config_path += ext;
+			string temp_config_path = GetUserTempPath();
+			temp_config_path += filename;
+			temp_config_path += ext;
 
-		//copy file from remote path
-		CopyFileFromRemote(remote_config_path, temp_config_path);
+			//copy file from remote path
+			CopyFileFromRemote(remote_config_path, temp_config_path);
 
-		INIReader reader(temp_config_path);
+			INIReader reader(temp_config_path);
 
-		reader.ParseError();
+			reader.ParseError();
 
-		gRemoteFilePath = reader.Get("DAEMON", "RemoteFilePath", "");
-		gSyncTime = reader.Get("DAEMON", "SyncTime", "13:00");
-		gLogFilePath = reader.Get("LOG", "LogFilePath", "D:\\ShotgunDesktopDaemonLog.txt");
-		
-		return true;
-	}
-	catch (const std::exception& e)
-	{
-		WriteLog("读取配置文件失败！");
-		return false;
+			gRemoteFilePath = reader.Get("DAEMON", "RemoteFilePath", "");
+			gSyncTime = reader.Get("DAEMON", "SyncTime", "13:00");
+			gLogFilePath = reader.Get("LOG", "LogFilePath", "D:\\ShotgunDesktopDaemonLog.txt");
+
+			return true;
+		}
+		catch (const std::exception & e)
+		{
+			WriteLog("读取配置文件失败！");
+			Sleep(5000);
+			Sleep(5000);
+			Sleep(5000);
+			Sleep(5000);
+			//return false;
+		}
 	}
 }
 
@@ -243,20 +250,34 @@ int main()
 	HANDLE hMutex = CreateMutex(NULL, FALSE, TEXT("ShotgunDesktopDaemon"));
 	if ((hMutex == NULL) || (GetLastError() == ERROR_ALREADY_EXISTS))
 	{
+		WriteLog("ShotgunDesktopDaemon已经存在一个实例运行");
 		CloseHandle(hMutex);
 		return 0;
 	}
 
 	//开机自动隐藏窗口
 	HWND hwnd;
-	hwnd = FindWindow("ConsoleWindowClass", NULL);//找到当前窗口句柄
-	if (hwnd)
+	//hwnd = FindWindow("ConsoleWindowClass", NULL);//找到当前窗口句柄
+
+	//for (int i = 0; i < 20; i++)
+	//{
+	//	//hwnd = GetConsoleWindow();
+	//	char strTitle[255];
+	//	GetConsoleTitle(strTitle, 255);
+	//	hwnd = FindWindow("ConsoleWindowClass", strTitle);
+	//	if(hwnd !=NULL)
+	//		break;
+	//	Sleep(1000);
+	//}
+	//	 
+	//if (hwnd)
 	{
 
 #if NDEBUG
 		
-		ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
-		ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
+		//ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
+		//ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
+
 		//CancelAutoStart();
 		//Sleep(100);
 		AutoStart();
@@ -293,4 +314,8 @@ int main()
 			Sleep(30*1000);// sleep 30 second in loop
 		}
 	}
+	//else
+	//{
+	//	WriteLog("未能找到当前窗口句柄");
+	//}
 }

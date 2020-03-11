@@ -47,16 +47,16 @@ int main()
 		CloseHandle(hMutex);
 		return 0;
 	}
-	//开机自动隐藏窗口
-	HWND hwnd;
-	hwnd = FindWindow("ConsoleWindowClass", NULL);//找到当前窗口句柄
+	////开机自动隐藏窗口
+	//HWND hwnd;
+	//hwnd = FindWindow("ConsoleWindowClass", NULL);//找到当前窗口句柄
 
-	if (hwnd)
+	//if (hwnd)
 	{
 #if NDEBUG
 
-		ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
-		ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
+		//ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
+		//ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
 		CancelAutoStart();
 #endif
 	}
