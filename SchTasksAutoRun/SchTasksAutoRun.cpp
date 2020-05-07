@@ -14,7 +14,6 @@
 #include "tools.h"
 using namespace std;
 
-
 #if NDEBUG
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #endif
@@ -28,7 +27,6 @@ namespace fs = std::filesystem;
 #define REMOTE_CONFIG_PATH	"W:\\Tools\\ShotgunConfig\\ShotgunDesktop\\ShotgunDesktopDaemonConfig.ini"
 #define IGNORE_USER_PATH	"W:\\Tools\\ShotgunConfig\\ShotgunDesktop\\Timelog\\IgnoreUser"
 #endif
-
 
 static string gTaskNameNotify = "";
 static string gTaskNameCheck = "";
@@ -92,7 +90,6 @@ int main(int argc, char** argv)
 	string Saturday;
 	string Sunday;
 
-
 	try
 	{
 		string remote_config_path = REMOTE_CONFIG_PATH;
@@ -123,7 +120,6 @@ int main(int argc, char** argv)
 		Saturday = reader.Get("DAY_OF_WEEK", "Saturday", "OFF");
 		Sunday = reader.Get("DAY_OF_WEEK", "Sunday", "OFF");
 
-		
 		gRemoteFilePath = reader.Get("TASKS", "RemoteFilePath", "");
 		gTaskName = reader.Get("TASKS", "TaskName", "ShotgunDesktopTimeLogRunTask");
 
@@ -134,7 +130,6 @@ int main(int argc, char** argv)
 		gStartTimeCheck = reader.Get("TASKS", "StartTimeCheck", "17:25");
 		gRemoteFilePathCheck = reader.Get("TASKS", "RemoteFilePathCheck", "");
 		gTaskNameCheck = reader.Get("TASKS", "TaskNameCheck", "ShotgunDesktopTimeLogCheckTask");
-
 
 		gLogFilePath = reader.Get("LOG", "LogFilePath", "D:\\ShotgunDesktopDaemonLog.txt");
 	}
@@ -301,7 +296,6 @@ void DoTask()
 	local_file_path_check += filename;
 	local_file_path_check += ext;
 
-
 	try
 	{
 		//Auto download file from remote path
@@ -326,7 +320,6 @@ void DoTask()
 			Sleep(200);
 			CreateOnceTask(gTaskNameCheck, local_file_path_check, gStartTimeCheck);
 		}
-
 	}
 	catch (const std::exception & e)
 	{

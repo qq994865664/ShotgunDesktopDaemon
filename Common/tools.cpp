@@ -58,7 +58,6 @@ char* w2c_long(const WCHAR* wstr)
 	return str;
 }
 
-
 char* cn2utf8(const char* m_string)
 {
 	int len = 0;
@@ -82,7 +81,7 @@ char* cn2utf8(const char* m_string)
 
 string GetModuleDir()
 {
-	char lp_filename[MAX_PATH] = {0};
+	char lp_filename[MAX_PATH] = { 0 };
 	GetModuleFileName(NULL, lp_filename, MAX_PATH);
 	string file_name = lp_filename;
 	string::size_type ipos = file_name.rfind('\\');
@@ -92,7 +91,7 @@ string GetModuleDir()
 string int2str(int inum)
 {
 	char szbuf[128] = { 0 };
-	sprintf_s(szbuf, 128,"%d", inum);
+	sprintf_s(szbuf, 128, "%d", inum);
 	return szbuf;
 }
 

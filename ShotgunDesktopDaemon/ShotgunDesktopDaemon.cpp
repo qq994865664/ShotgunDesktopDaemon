@@ -9,12 +9,11 @@
 #include "tchar.h"
 #include "ShotgunDesktopDaemon.h"
 #include <filesystem>
-#include <lmcons.h> 
+#include <lmcons.h>
 #include <fstream>
 #include "INIReader.h"
-#include <lmat.h> 
+#include <lmat.h>
 #pragma comment(lib,"NETAPI32.LIB")
-
 
 namespace fs = std::filesystem;
 
@@ -41,24 +40,22 @@ void AutoStart()
 	std::string strRegPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 	try
 	{
-		//1、找到系统的启动项  
-		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS) ///打开启动项       
+		//1、找到系统的启动项
+		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS) ///打开启动项
 		{
 			//2、得到本程序自身的全路径
 			TCHAR strExeFullDir[MAX_PATH] = { 0 };
 			GetModuleFileName(NULL, strExeFullDir, MAX_PATH);
-
 
 			//3、判断注册表项是否已经存在
 			TCHAR strDir[MAX_PATH] = {};
 			DWORD nLength = MAX_PATH;
 			long result = RegGetValue(hKey, nullptr, KEY_NAME, RRF_RT_REG_SZ, 0, strDir, &nLength);
 
-
 			//4、不存在
 			if (result != ERROR_SUCCESS || _tcscmp(strExeFullDir, strDir) != 0)
 			{
-				//5、添加一个子Key,并设置值，"GISRestart"是应用程序名字（不加后缀.exe） 
+				//5、添加一个子Key,并设置值，"GISRestart"是应用程序名字（不加后缀.exe）
 				RegSetValueEx(hKey, KEY_NAME, 0, REG_SZ, (LPBYTE)strExeFullDir,
 					(lstrlen(strExeFullDir) + 1) * sizeof(TCHAR));
 				//6、关闭注册表
@@ -83,7 +80,7 @@ void CancelAutoStart()
 	std::string strRegPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 	try
 	{
-		//1、找到系统的启动项  
+		//1、找到系统的启动项
 		if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, strRegPath.c_str(), 0, KEY_ALL_ACCESS, &hKey) == ERROR_SUCCESS)
 		{
 			//2、删除值
@@ -96,7 +93,6 @@ void CancelAutoStart()
 	{
 		WriteLog("CancelAutoStart，打开注册表出现异常");
 	}
-
 }
 
 bool CopyFileFromRemote(string file_path_from, string file_path_to)
@@ -115,15 +111,15 @@ void Jobadd(int hour, int second)
 	GetSystemDirectory(RootPath, MAX_PATH);
 	filepath = new char[strlen(RootPath) + 11];
 	strcpy(filepath, RootPath);
-	strcat(filepath, "\\notepad.exe"); //完整路径 
+	strcat(filepath, "\\notepad.exe"); //完整路径
 	memset(&ai, 0, sizeof(ai));
 	Len = MultiByteToWideChar(CP_ACP, 0, filepath, strlen(filepath), szFilePath, sizeof(szFilePath));
 	szFilePath[Len] = '\0';
 	ai.Command = szFilePath;
 	ai.DaysOfMonth = 0;
-	ai.DaysOfWeek = 0x7F; //7F等于二进制的7个1，就是每周的7天全部运行 
+	ai.DaysOfWeek = 0x7F; //7F等于二进制的7个1，就是每周的7天全部运行
 	ai.Flags = JOB_RUN_PERIODICALLY;
-	ai.JobTime = hour * 60 * 60 * 1000 + second * 60 * 1000; //22点21分，这里是以毫秒为单位的，所以需要乘这些值 
+	ai.JobTime = hour * 60 * 60 * 1000 + second * 60 * 1000; //22点21分，这里是以毫秒为单位的，所以需要乘这些值
 	ret = NetScheduleJobAdd(NULL, LPBYTE(&ai), &JobId);
 	//GetOverlappedResult
 	int i = GetLastError();
@@ -131,7 +127,6 @@ void Jobadd(int hour, int second)
 		std::cout << " SUCCESS!!" << std::endl;
 	else
 		std::cout << "Error" << std::endl;
-
 }
 
 void WriteLog(string str_log)
@@ -141,7 +136,6 @@ void WriteLog(string str_log)
 	outfile << str_log << endl;
 	outfile.close();
 }
-
 
 bool TimeUp(string str_time)
 {
@@ -234,7 +228,6 @@ void DownloadFile()
 		{
 			WriteLog("copy file from remote fail");
 		}
-
 	}
 	catch (const std::exception & e)
 	{
@@ -269,12 +262,11 @@ int main()
 	//		break;
 	//	Sleep(1000);
 	//}
-	//	 
+	//
 	//if (hwnd)
 	{
-
 #if NDEBUG
-		
+
 		//ShowOwnedPopups(hwnd, SW_HIDE);//显示或隐藏由指定窗口所有的全部弹出式窗口
 		//ShowWindow(hwnd, SW_HIDE);//控制窗口的可见性
 
@@ -302,18 +294,17 @@ int main()
 			if (isTimeUp && gSyncTimeFlag == 0)
 			{
 				gSyncTimeFlag++;
-				
-				DownloadFile();
 
+				DownloadFile();
 			}
 			else
 			{
 				gSyncTimeFlag = 0;
 			}
 
-			Sleep(30*1000);// sleep 30 second in loop
+			Sleep(30 * 1000);// sleep 30 second in loop
 		}
-	}
+}
 	//else
 	//{
 	//	WriteLog("未能找到当前窗口句柄");
